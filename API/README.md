@@ -1,4 +1,4 @@
-Sikuli API 2014 (version 1.1.x)
+Sikuli API 2019 (version 1.1.5)
 ===
 
 The Java implementation comprising the API to access the top elements (Screen, Region, Pattern, Match, Image, ...) and their methods allowing to search for images and to act on points and matches simulating mouse and keyboard.

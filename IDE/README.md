@@ -1,4 +1,4 @@
-Sikuli IDE 2014 (version 1.1.x)
+Sikuli IDE 2019 (version 1.1.5)
 ===
 
 Implements a GUI using Java, that allows to edit and run Sikuli scripts (currently Jython and JRuby are supported). It is an easy to use IDE focusing on the handling of the screenshots and images used in the typical Sikuli workflows.

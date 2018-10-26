@@ -16,7 +16,7 @@
 
   <groupId>com.sikulix</groupId>
   <artifactId>sikulix114</artifactId>
-  <version>1.1.4-SNAPSHOT</version>
+  <version>1.1.5-SNAPSHOT</version>
 
   <!-- to globally change the pom version:
   mvn versions:set -DnewVersion=1.1.0
@@ -49,7 +49,7 @@
     <sikuli.jarname>${project.version}</sikuli.jarname>
     <sikulixvmaj>1</sikulixvmaj>
     <sikulixvmin>1</sikulixvmin>
-    <sikulixvsub>4</sikulixvsub>
+    <sikulixvsub>5</sikulixvsub>
     <sikuli.usedversion>${sikulixvmaj}.${sikulixvmin}.${sikulixvsub}-SNAPSHOT</sikuli.usedversion>
     <sikulixjythonversion>2.7.1</sikulixjythonversion>
     <sikulixjrubyversion>9.2.0.0</sikulixjrubyversion>
