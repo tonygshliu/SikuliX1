@@ -3,7 +3,7 @@
  */
 package org.sikuli.basics;
 
-import org.sikuli.script.Image;
+import org.sikuli.script.ImageObject;
 //import org.sikuli.script.RunTime;
 
 import java.io.File;
@@ -80,14 +80,13 @@ public class Settings {
   public static double MinSimilarity = 0.7;
   public static boolean CheckLastSeen = true;
   public static float CheckLastSeenSimilar = 0.95f;
-  //public static boolean UseImageFinder = false;
   public static float AlwaysResize = 0;
   public static org.sikuli.script.ImageCallback ImageCallback = null;
 
   private static int ImageCache = 64;
 
   /**
-   * set the maximum to be used for the {@link Image} cache
+   * set the maximum to be used for the {@link ImageObject} cache
    * <br>the start up value is 64 (meaning MB)
    * <br>using 0 switches off caching and clears the cache in that moment
    *
@@ -95,7 +94,7 @@ public class Settings {
    */
   public static void setImageCache(int max) {
     if (ImageCache > max) {
-      Image.clearCache(max);
+      ImageObject.clearCache(max);
     }
     ImageCache = max;
   }

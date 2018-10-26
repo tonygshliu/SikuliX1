@@ -6,7 +6,7 @@ package org.sikuli.android;
 
 import org.sikuli.basics.Debug;
 import org.sikuli.script.*;
-import org.sikuli.script.Image;
+import org.sikuli.script.ImageObject;
 
 /**
  * Created by RaiMan on 12.07.16.
@@ -72,7 +72,7 @@ public class ADBTest {
     adbs.wait(1f);
     ScreenImage sIMg = adbs.userCapture("Android");
     sIMg.save(RunTime.get().fSikulixStore.getAbsolutePath(), "android");
-    adbs.aTap(new Image(sIMg));
+    adbs.aTap(new ImageObject(sIMg));
   }
 
 
@@ -100,7 +100,7 @@ public class ADBTest {
         ScreenImage sIMg = aScr.userCapture("AndroidTest");
         sIMg.save(RunTime.get().fSikulixStore.getAbsolutePath(), "android");
         try {
-          aScr.aTap(new Image(sIMg));
+          aScr.aTap(new ImageObject(sIMg));
           Sikulix.popup("The image was found on the device's current screen" +
                   "\nand should have been tapped.\n" +
                   "\nIf you think it worked, you can now try\n" +

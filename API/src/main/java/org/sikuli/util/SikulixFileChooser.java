@@ -73,8 +73,8 @@ public class SikulixFileChooser {
 
   public File loadImage() {
     loadingImage = true;
-    File ret = showFileChooser("Load Image File", LOAD, FILES,
-            new FileNameExtensionFilter("Image files (jpg, png)", "jpg", "jpeg", "png"));
+    File ret = showFileChooser("Load ImageObject File", LOAD, FILES,
+            new FileNameExtensionFilter("ImageObject files (jpg, png)", "jpg", "jpeg", "png"));
     return ret;
   }
 

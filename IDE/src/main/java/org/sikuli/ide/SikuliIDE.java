@@ -20,16 +20,8 @@ import org.sikuli.basics.Settings;
 import org.sikuli.idesupport.IDESplash;
 import org.sikuli.idesupport.IDESupport;
 import org.sikuli.idesupport.IIDESupport;
-import org.sikuli.script.IScreen;
-import org.sikuli.script.Image;
-import org.sikuli.script.ImagePath;
-import org.sikuli.script.Key;
-import org.sikuli.script.Region;
-import org.sikuli.script.RunServer;
-import org.sikuli.script.RunTime;
-import org.sikuli.script.Runner;
-import org.sikuli.script.Screen;
-import org.sikuli.script.ScreenImage;
+import org.sikuli.script.*;
+import org.sikuli.script.ImageObject;
 import org.sikuli.script.Sikulix;
 import org.sikuli.scriptrunner.IScriptRunner;
 import org.sikuli.scriptrunner.ScriptingSupport;
@@ -2640,7 +2632,7 @@ public class SikuliIDE extends JFrame implements InvocationHandler {
         addErrorMark(ret);
         srunners[0].close();
         srunners[0] = null;
-        if (Image.getIDEshouldReload()) {
+        if (ImageObject.getIDEshouldReload()) {
           EditorPane pane = sikulixIDE.getCurrentCodePane();
           int line = pane.getLineNumberAtCaret(pane.getCaretPosition());
           sikulixIDE.getCurrentCodePane().reparse();

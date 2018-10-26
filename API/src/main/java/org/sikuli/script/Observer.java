@@ -174,9 +174,9 @@ public class Observer {
         }
       }
       Object ptn = eventNames.get(name);
-      Image img = Image.getImageFromTarget(ptn);
+      ImageObject img = ImageObject.getImageFromTarget(ptn);
       if (img == null || !img.isUseable()) {
-        Debug.error("EventMgr: checkPatterns: Image not valid", ptn);
+        Debug.error("EventMgr: checkPatterns: ImageObject not valid", ptn);
         eventStates.put(name, State.MISSING);
         continue;
       }
@@ -184,7 +184,6 @@ public class Observer {
       boolean hasMatch = false;
       long lastSearchTime;
       long now = 0;
-//      if (!Settings.UseImageFinder && Settings.CheckLastSeen && null != img.getLastSeen()) {
       if (Settings.CheckLastSeen && null != img.getLastSeen()) {
         Region r = Region.create(img.getLastSeen());
         if (observedRegion.contains(r)) {
@@ -203,12 +202,6 @@ public class Observer {
       }
       if (match == null) {
         if (finder == null) {
-//          if (Settings.UseImageFinder) {
-//            finder = new ImageFinder(observedRegion);
-//            ((ImageFinder) finder).setIsMultiFinder();
-//          } else {
-//            finder = new Finder(simg, observedRegion);
-//          }
           finder = new Finder(simg, observedRegion);
         }
         lastSearchTime = (new Date()).getTime();

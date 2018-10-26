@@ -22,7 +22,7 @@ import org.sikuli.basics.Settings;
  * This class was used to locate image files in the filesystem <br>
  * and in the internet (the files are cached locally) <br>
  *
- * @deprecated will be completely replaced by the classes Image and ImagePath
+ * @deprecated will be completely replaced by the classes ImageObject and ImagePath
  * relevant functions are already redirected as needed
  */
 @Deprecated
@@ -136,14 +136,14 @@ public class ImageLocator {
   }
 
   /**
-   * forwarded to Image.create(filename).get()
+   * forwarded to ImageObject.create(filename).get()
    *
    * @return a BufferedImage from the given filename or null
    * @deprecated
    */
   @Deprecated
   public static BufferedImage getImage(String filename) {
-    return Image.create(filename).get();
+    return ImageObject.create(filename).get();
   }
 
   /***************************

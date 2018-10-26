@@ -180,7 +180,7 @@ public class Finder2 {
             List<Word> wordsInLine = null;
             List<String> wordsInText = new ArrayList<>();
             if (globalSearch) {
-              BufferedImage bLine = Image.getSubimage(bimgWork, wordOrLine);
+              BufferedImage bLine = ImageObject.getSubimage(bimgWork, wordOrLine);
               wordsInLine = tapi.getWords(bLine, levelWord);
               if (singleWord) {
                 for (Word wordInLine : wordsInLine) {

@@ -27,15 +27,15 @@ class FindFailedDialog extends JDialog implements ActionListener {
   FindFailedResponse _response;
   boolean isCapture = false;
 
-  public FindFailedDialog(org.sikuli.script.Image target) {
+  public FindFailedDialog(ImageObject target) {
     init(target, false);
   }
 
-  public FindFailedDialog(org.sikuli.script.Image target, boolean isCapture) {
+  public FindFailedDialog(ImageObject target, boolean isCapture) {
     init(target, isCapture);
   }
 
-  private void init(org.sikuli.script.Image target, boolean isCapture) {
+  private void init(ImageObject target, boolean isCapture) {
     this.isCapture = isCapture;
     setModal(true);
     JPanel panel = new JPanel();
@@ -87,7 +87,7 @@ class FindFailedDialog extends JDialog implements ActionListener {
     return _response;
   }
 
-  <PatternString> Component createTargetComponent(org.sikuli.script.Image img) {
+  <PatternString> Component createTargetComponent(ImageObject img) {
     JLabel cause = null;
     JPanel dialog = new JPanel();
     dialog.setLayout(new BorderLayout());

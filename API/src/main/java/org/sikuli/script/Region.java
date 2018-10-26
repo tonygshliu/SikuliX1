@@ -2218,9 +2218,9 @@ public class Region {
   }
 
   /**
-   * Waits for the Pattern, String or Image to appear or timeout (in second) is passed
+   * Waits for the Pattern, String or ImageObject to appear or timeout (in second) is passed
    *
-   * @param <PSI>   Pattern, String or Image
+   * @param <PSI>   Pattern, String or ImageObject
    * @param target  The target to search for
    * @param timeout Timeout in seconds
    * @return The found Match
@@ -2230,7 +2230,7 @@ public class Region {
     lastMatch = null;
     String shouldAbort = "";
     RepeatableFind rf = new RepeatableFind(target, null);
-    Image img = rf._image;
+    ImageObject img = rf._image;
     String targetStr = img.getName();
     Boolean response = true;
     if (!img.isText() && !img.isValid() && img.hasIOException()) {
@@ -2280,9 +2280,9 @@ public class Region {
   }
 
   /**
-   * Waits for the Pattern, String or Image to appear until the AutoWaitTimeout value is exceeded.
+   * Waits for the Pattern, String or ImageObject to appear until the AutoWaitTimeout value is exceeded.
    *
-   * @param <PSI>  Pattern, String or Image
+   * @param <PSI>  Pattern, String or ImageObject
    * @param target The target to search for
    * @return The found Match
    * @throws FindFailed if the Find operation finally failed
@@ -2296,17 +2296,17 @@ public class Region {
   }
 
   /**
-   * finds the given Pattern, String or Image in the region and returns the best match. If AutoWaitTimeout is set, this
+   * finds the given Pattern, String or ImageObject in the region and returns the best match. If AutoWaitTimeout is set, this
    * is equivalent to wait(). Otherwise only one search attempt will be done.
    *
-   * @param <PSI>  Pattern, String or Image
+   * @param <PSI>  Pattern, String or ImageObject
    * @param target A search criteria
    * @return If found, the element. null otherwise
    * @throws FindFailed if the Find operation failed
    */
   public <PSI> Match find(PSI target) throws FindFailed {
     lastMatch = null;
-    Image img = Image.getImageFromTarget(target);
+    ImageObject img = ImageObject.getImageFromTarget(target);
     Boolean response = true;
     if (!img.isText() && !img.isValid() && img.hasIOException()) {
       response = handleImageMissing(img, false); //find()
@@ -2350,7 +2350,7 @@ public class Region {
    * Check if target exists with a specified timeout<br>
    * timout = 0: returns immediately after first search
    *
-   * @param <PSI>   Pattern, String or Image
+   * @param <PSI>   Pattern, String or ImageObject
    * @param target  The target to search for
    * @param timeout Timeout in seconds
    * @return the match (null if not found or image file missing)
@@ -2358,7 +2358,7 @@ public class Region {
   public <PSI> Match exists(PSI target, double timeout) {
     lastMatch = null;
     RepeatableFind rf = new RepeatableFind(target, null);
-    Image img = rf._image;
+    ImageObject img = rf._image;
     Boolean response = true;
     if (!img.isText() && !img.isValid() && img.hasIOException()) {
       response = handleImageMissing(img, false);
@@ -2393,8 +2393,8 @@ public class Region {
   /**
    * Check if target exists (with the default autoWaitTimeout)
    *
-   * @param <PSI>  Pattern, String or Image
-   * @param target Pattern, String or Image
+   * @param <PSI>  Pattern, String or ImageObject
+   * @param target Pattern, String or ImageObject
    * @return the match (null if not found or image file missing)
    */
   public <PSI> Match exists(PSI target) {
@@ -2404,8 +2404,8 @@ public class Region {
   /**
    * Check if target exists (with the default autoWaitTimeout)
    *
-   * @param <PSI>  Pattern, String or Image
-   * @param target Pattern, String or Image
+   * @param <PSI>  Pattern, String or ImageObject
+   * @param target Pattern, String or ImageObject
    * @return the match (null if not found or image file missing)
    */
   public <PSI> Match has(PSI target) {
@@ -2415,14 +2415,14 @@ public class Region {
   /**
    * waits until target vanishes or timeout (in seconds) is passed
    *
-   * @param <PSI>   Pattern, String or Image
-   * @param target  Pattern, String or Image
+   * @param <PSI>   Pattern, String or ImageObject
+   * @param target  Pattern, String or ImageObject
    * @param timeout time in seconds
    * @return true if target vanishes, false otherwise and if imagefile is missing.
    */
   public <PSI> boolean waitVanish(PSI target, double timeout) {
     RepeatableVanish rv = new RepeatableVanish(target);
-    Image img = rv._image;
+    ImageObject img = rv._image;
     String targetStr = img.getName();
     Boolean response = true;
     if (!img.isValid() && img.hasIOException()) {
@@ -2443,7 +2443,7 @@ public class Region {
   /**
    * waits until target vanishes or timeout (in seconds) is passed (AutoWaitTimeout)
    *
-   * @param <PSI>  Pattern, String or Image
+   * @param <PSI>  Pattern, String or ImageObject
    * @param target The target to wait for it to vanish
    * @return true if the target vanishes, otherwise returns false.
    */
@@ -2452,9 +2452,9 @@ public class Region {
   }
 
   /**
-   * finds all occurences of the given Pattern, String or Image in the region and returns an Iterator of Matches.
+   * finds all occurences of the given Pattern, String or ImageObject in the region and returns an Iterator of Matches.
    *
-   * @param <PSI>  Pattern, String or Image
+   * @param <PSI>  Pattern, String or ImageObject
    * @param target A search criteria
    * @return All elements matching
    * @throws FindFailed if the Find operation failed
@@ -2462,7 +2462,7 @@ public class Region {
   public <PSI> Iterator<Match> findAll(PSI target) throws FindFailed {
     lastMatches = null;
     RepeatableFindAll rf = new RepeatableFindAll(target, null);
-    Image img = rf._image;
+    ImageObject img = rf._image;
     String targetStr = img.getName();
     Boolean response = true;
     if (!img.isValid() && img.hasIOException()) {
@@ -2757,10 +2757,10 @@ public class Region {
   //<editor-fold defaultstate="collapsed" desc="find internal methods">
 
   /**
-   * Match doFind( Pattern/String/Image ) finds the given pattern on the screen and returns the best match without
+   * Match doFind( Pattern/String/ImageObject ) finds the given pattern on the screen and returns the best match without
    * waiting.
    */
-  private <PSI> Match doFind(PSI ptn, Image img, RepeatableFind repeating) {
+  private <PSI> Match doFind(PSI ptn, ImageObject img, RepeatableFind repeating) {
     Finder finder = null;
     Match match = null;
     //IScreen screen = null;
@@ -2817,7 +2817,7 @@ public class Region {
             runFinder(finder, ptn);
           }
         }
-      } else if (ptn instanceof Image) {
+      } else if (ptn instanceof ImageObject) {
         if (img.isValid()) {
           lastSearchTime = (new Date()).getTime();
           finder = checkLastSeenAndCreateFinder(img, findTimeout, null);
@@ -2855,25 +2855,25 @@ public class Region {
         highlight(2, "#000255000");
       }
     }
-    if (target instanceof Image) {
-      f.find((Image) target);
+    if (target instanceof ImageObject) {
+      f.find((ImageObject) target);
     } else if (target instanceof Pattern) {
       f.find((Pattern) target);
     }
   }
 
-  private Finder checkLastSeenAndCreateFinder(Image img, double findTimeout, Pattern ptn) {
+  private Finder checkLastSeenAndCreateFinder(ImageObject img, double findTimeout, Pattern ptn) {
     return doCheckLastSeenAndCreateFinder(null, img, findTimeout, ptn);
   }
 
-  private Finder doCheckLastSeenAndCreateFinder(ScreenImage base, Image img, double findTimeout, Pattern ptn) {
+  private Finder doCheckLastSeenAndCreateFinder(ScreenImage base, ImageObject imgObj, double findTimeout, Pattern ptn) {
     if (base == null) {
       base = getScreen().capture(this);
     }
     boolean shouldCheckLastSeen = false;
     double score = 0;
-    if (Settings.CheckLastSeen && null != img.getLastSeen()) {
-      score = img.getLastSeenScore() - 0.01;
+    if (Settings.CheckLastSeen && null != imgObj.getLastSeen()) {
+      score = imgObj.getLastSeenScore() - 0.01;
       if (ptn != null) {
         if (!(ptn.getSimilar() > score)) {
           shouldCheckLastSeen = true;
@@ -2881,7 +2881,7 @@ public class Region {
       }
     }
     if (shouldCheckLastSeen) {
-      Region r = Region.create(img.getLastSeen());
+      Region r = Region.create(imgObj.getLastSeen());
       if (this.contains(r)) {
         Finder f = new Finder(base.getSub(r.getRect()), r);
         if (Debug.shouldHighlight()) {
@@ -2891,7 +2891,7 @@ public class Region {
         }
 
         if (ptn == null) {
-          f.find(new Pattern(img).similar(score));
+          f.find(new Pattern(imgObj).similar(score));
         } else {
           f.find(new Pattern(ptn).similar(score));
         }
@@ -2906,7 +2906,7 @@ public class Region {
   }
 
   /**
-   * Match findAll( Pattern/String/Image ) finds all the given pattern on the screen and returns the best matches
+   * Match findAll( Pattern/String/ImageObject ) finds all the given pattern on the screen and returns the best matches
    * without waiting.
    */
   private <PSI> Iterator<Match> doFindAll(PSI ptn, RepeatableFindAll repeating) {
@@ -2928,7 +2928,7 @@ public class Region {
           img = Image.create((String) ptn);
           if (img.isValid()) {
             finder = new Finder(getScreen().capture(x, y, w, h), this);
-            finder.findAll(img);
+            finder.findAll(img.getObj());
           } else if (img.isText()) {
             findingText = true;
             someText = img.getText();
@@ -2947,11 +2947,11 @@ public class Region {
           finder = new Finder(getScreen().capture(x, y, w, h), this);
           finder.findAll((Pattern) ptn);
         }
-      } else if (ptn instanceof Image) {
-        if (((Image) ptn).isValid()) {
-          img = ((Image) ptn);
+      } else if (ptn instanceof ImageObject) {
+        if (((ImageObject) ptn).isValid()) {
+          img = ((ImageObject) ptn);
           finder = new Finder(getScreen().capture(x, y, w, h), this);
-          finder.findAll((Image) ptn);
+          finder.findAll((ImageObject) ptn);
         }
       } else {
         log(-1, "doFind: invalid parameter: %s", ptn);
@@ -3052,12 +3052,12 @@ public class Region {
 
     Match _match = null;
     Finder _finder = null;
-    Image _image = null;
+    ImageObject _image = null;
 
-    public <PSI> RepeatableFind(PSI target, Image img) {
+    public <PSI> RepeatableFind(PSI target, ImageObject img) {
       _target = target;
       if (img == null) {
-        _image = Image.getImageFromTarget(target);
+        _image = ImageObject.getImageFromTarget(target);
       } else {
         _image = img;
       }
@@ -3098,12 +3098,12 @@ public class Region {
     Object _target;
     Iterator<Match> _matches = null;
     Finder _finder = null;
-    Image _image = null;
+    ImageObject _image = null;
 
-    public <PSI> RepeatableFindAll(PSI target, Image img) {
+    public <PSI> RepeatableFindAll(PSI target, ImageObject img) {
       _target = target;
       if (img == null) {
-        _image = Image.getImageFromTarget(target);
+        _image = ImageObject.getImageFromTarget(target);
       } else {
         _image = img;
       }
@@ -3170,12 +3170,12 @@ public class Region {
     Finder finder = null;
     Match match = null;
     boolean findingText = false;
-    Image img = null;
+    ImageObject img = null;
     if (target instanceof String) {
       if (((String) target).startsWith("\t") && ((String) target).endsWith("\t")) {
         findingText = true;
       } else {
-        img = Image.create((String) target);
+        img = ImageObject.create((String) target);
         if (img.isValid()) {
           finder = doCheckLastSeenAndCreateFinder(base, img, 0.0, null);
           if (!finder.hasNext()) {
@@ -3184,7 +3184,7 @@ public class Region {
         } else if (img.isText()) {
           findingText = true;
         } else {
-          throw new IOException("Region: findInImage: Image not loadable: " + target.toString());
+          throw new IOException("Region: findInImage: ImageObject not loadable: " + target.toString());
         }
       }
       if (findingText) {
@@ -3202,17 +3202,17 @@ public class Region {
           runFinder(finder, target);
         }
       } else {
-        throw new IOException("Region: findInImage: Image not loadable: " + target.toString());
+        throw new IOException("Region: findInImage: ImageObject not loadable: " + target.toString());
       }
-    } else if (target instanceof Image) {
-      if (((Image) target).isValid()) {
-        img = ((Image) target);
+    } else if (target instanceof ImageObject) {
+      if (((ImageObject) target).isValid()) {
+        img = ((ImageObject) target);
         finder = doCheckLastSeenAndCreateFinder(base, img, 0.0, null);
         if (!finder.hasNext()) {
           runFinder(finder, img);
         }
       } else {
-        throw new IOException("Region: findInImage: Image not loadable: " + target.toString());
+        throw new IOException("Region: findInImage: ImageObject not loadable: " + target.toString());
       }
     } else {
       log(-1, "findInImage: invalid parameter: %s", target);
@@ -3237,7 +3237,7 @@ public class Region {
     ScreenImage base = getScreen().capture(this);
     for (Object obj : pList) {
       mArray[nobj] = null;
-      if (obj instanceof Pattern || obj instanceof String || obj instanceof Image) {
+      if (obj instanceof Pattern || obj instanceof String || obj instanceof ImageObject) {
         theSubs[nobj] = new SubFindRun(mArray, nobj, base, obj, this);
         new Thread(theSubs[nobj]).start();
       }
@@ -3266,7 +3266,7 @@ public class Region {
   }
 
   protected <PSIMRL> Location getLocationFromTarget(PSIMRL target) throws FindFailed {
-    if (target instanceof Pattern || target instanceof String || target instanceof Image) {
+    if (target instanceof Pattern || target instanceof String || target instanceof ImageObject) {
       Match m = wait(target);
       if (m != null) {
         if (isOtherScreen()) {
@@ -3289,7 +3289,7 @@ public class Region {
     return null;
   }
 
-  private <PSI> Boolean handleFindFailed(PSI target, Image img) {
+  private <PSI> Boolean handleFindFailed(PSI target, ImageObject img) {
     log(lvl, "handleFindFailed: %s", target);
     Boolean state = null;
     ObserveEvent evt = null;
@@ -3336,7 +3336,7 @@ public class Region {
     return state;
   }
 
-  private Boolean handleImageMissing(Image img, boolean recap) {
+  private Boolean handleImageMissing(ImageObject img, boolean recap) {
     log(lvl, "handleImageMissing: %s", img.getName());
     ObserveEvent evt = null;
     FindFailedResponse response = findFailedResponse;
@@ -3367,10 +3367,10 @@ public class Region {
           return null;
         }
         simg.getFile(path, img.getImageName());
-        Image.set(img);
+        ImageObject.set(img);
         if (img.isValid()) {
           log(lvl, "handleImageMissing: %scaptured: %s", (recap ? "re" : ""), img);
-          Image.setIDEshouldReload(img);
+          ImageObject.setIDEshouldReload(img);
           return true;
         }
       }
@@ -3384,7 +3384,7 @@ public class Region {
     return false;
   }
 
-  private FindFailedResponse handleFindFailedShowDialog(Image img, boolean shouldCapture) {
+  private FindFailedResponse handleFindFailedShowDialog(ImageObject img, boolean shouldCapture) {
     log(lvl, "handleFindFailedShowDialog: requested %s", (shouldCapture ? "(with capture)" : ""));
     FindFailedResponse response;
     FindFailedDialog fd = new FindFailedDialog(img, shouldCapture);
@@ -3480,8 +3480,8 @@ public class Region {
    * for details about the observe event handler: {@link ObserverCallBack}<br>
    * for details about APPEAR/VANISH/CHANGE events: {@link ObserveEvent}<br>
    *
-   * @param <PSI>    Pattern, String or Image
-   * @param target   Pattern, String or Image
+   * @param <PSI>    Pattern, String or ImageObject
+   * @param target   Pattern, String or ImageObject
    * @param observer ObserverCallBack
    * @return the event's name
    */
@@ -3494,8 +3494,8 @@ public class Region {
    * obtained using @{link Observing}<br>
    * for details about APPEAR/VANISH/CHANGE events: {@link ObserveEvent}<br>
    *
-   * @param <PSI>  Pattern, String or Image
-   * @param target Pattern, String or Image
+   * @param <PSI>  Pattern, String or ImageObject
+   * @param target Pattern, String or ImageObject
    * @return the event's name
    */
   public <PSI> String onAppear(PSI target) {
@@ -3508,7 +3508,7 @@ public class Region {
       observer = new ObserverCallBack(observer, obsType);
     }
     if (!(targetThreshhold instanceof Integer)) {
-      Image img = Image.getImageFromTarget(targetThreshhold);
+      ImageObject img = ImageObject.getImageFromTarget(targetThreshhold);
       Boolean response = true;
       if (!img.isValid() && img.hasIOException()) {
         response = handleImageMissing(img, false);
@@ -3530,8 +3530,8 @@ public class Region {
    * for details about the observe event handler: {@link ObserverCallBack}<br>
    * for details about APPEAR/VANISH/CHANGE events: {@link ObserveEvent}<br>
    *
-   * @param <PSI>    Pattern, String or Image
-   * @param target   Pattern, String or Image
+   * @param <PSI>    Pattern, String or ImageObject
+   * @param target   Pattern, String or ImageObject
    * @param observer ObserverCallBack
    * @return the event's name
    */
@@ -3544,8 +3544,8 @@ public class Region {
    * event can be obtained using @{link Observing}<br>
    * for details about APPEAR/VANISH/CHANGE events: {@link ObserveEvent}<br>
    *
-   * @param <PSI>  Pattern, String or Image
-   * @param target Pattern, String or Image
+   * @param <PSI>  Pattern, String or ImageObject
+   * @param target Pattern, String or ImageObject
    * @return the event's name
    */
   public <PSI> String onVanish(PSI target) {
@@ -3607,8 +3607,8 @@ public class Region {
   //<editor-fold defaultstate="collapsed" desc="obsolete">
 //	/**
 //	 *INTERNAL USE ONLY: for use with scripting API bridges
-//	 * @param <PSI> Pattern, String or Image
-//	 * @param target Pattern, String or Image
+//	 * @param <PSI> Pattern, String or ImageObject
+//	 * @param target Pattern, String or ImageObject
 //	 * @param observer ObserverCallBack
 //	 * @return the event's name
 //	 */
@@ -3618,8 +3618,8 @@ public class Region {
 //
 //	/**
 //	 *INTERNAL USE ONLY: for use with scripting API bridges
-//	 * @param <PSI> Pattern, String or Image
-//	 * @param target Pattern, String or Image
+//	 * @param <PSI> Pattern, String or ImageObject
+//	 * @param target Pattern, String or ImageObject
 //	 * @param observer ObserverCallBack
 //	 * @return the event's name
 //	 */
@@ -4669,7 +4669,7 @@ public class Region {
 *
  * EXPERIMENTAL: for Android over ADB
  *
- * @param <PFRML> Pattern, String, Image, Match, Region or Location
+ * @param <PFRML> Pattern, String, ImageObject, Match, Region or Location
  * @param target  PFRML
  * @throws FindFailed image not found
 */
@@ -4717,7 +4717,7 @@ public class Region {
 *
  * EXPERIMENTAL: for Android over ADB
  *
- * @param <PFRML> Pattern, String, Image, Match, Region or Location
+ * @param <PFRML> Pattern, String, ImageObject, Match, Region or Location
  * @param from    PFRML
  * @param to      PFRML
  * @throws FindFailed image not found

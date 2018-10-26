@@ -1022,9 +1022,9 @@ public class Key {
 //
 //    @Override
 //    public void run() {
-//      BufferedImage img = Image.create("SikuliLogo").get();
+//      BufferedImage img = ImageObject.create("SikuliLogo").get();
 //      Debug.log(3, "KBSetup: %s", img);
-//      Image.dump();
+//      ImageObject.dump();
 //      kbSetup = new JFrame("Localized Keyboard Setup");
 //      Container mpwinCP = kbSetup.getContentPane();
 //      mpwinCP.setLayout(new BorderLayout());

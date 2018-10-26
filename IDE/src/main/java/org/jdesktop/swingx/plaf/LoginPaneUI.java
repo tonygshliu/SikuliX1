@@ -13,7 +13,7 @@ import javax.swing.plaf.PanelUI;
  */
 public abstract class LoginPaneUI extends PanelUI {
     /**
-     * @return The Image to use as the banner for the JXLoginPane. If
+     * @return The ImageObject to use as the banner for the JXLoginPane. If
      * this method returns null, then no banner will be shown.
      */
     public abstract Image getBanner();

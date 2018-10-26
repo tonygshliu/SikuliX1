@@ -21,7 +21,7 @@ import javax.swing.border.Border;
 import javax.swing.text.Element;
 import org.sikuli.basics.Debug;
 import org.sikuli.basics.FileManager;
-import org.sikuli.script.Image;
+import org.sikuli.script.ImageObject;
 import org.sikuli.script.Location;
 
 public class EditorPatternLabel extends EditorRegionLabel {
@@ -37,7 +37,7 @@ public class EditorPatternLabel extends EditorRegionLabel {
   private String imgName = null;
   private String imgNameShort = null;
   private String imgFile;
-  private Image image;
+  private ImageObject image;
   private JFrame imgpop = null;
   private boolean onImagePath = true;
   private boolean isFromCapture;
@@ -146,7 +146,7 @@ public class EditorPatternLabel extends EditorRegionLabel {
 						&& FileManager.isFilenameDotted(givenName)) {
 			return;
 		}
-		Image img = pane.getImageInBundle(givenName);
+		ImageObject img = pane.getImageInBundle(givenName);
 		if (img.isValid()) {
 			if (isFromCapture || !img.isAbsolute() || img.isBundled()) {
 				image = img;
@@ -214,7 +214,7 @@ public class EditorPatternLabel extends EditorRegionLabel {
 
   public void resetLabel(String givenFileName, float sim, Location off, float resizeFactor) {
     imgName = (new File(givenFileName)).getName();
-    image = Image.createThumbNail(imgName);
+    image = ImageObject.createThumbNail(imgName);
     imgFile = image.getFilename();
     imgNameShort = imgName.replaceFirst(".png", "").replaceFirst(".jpg", "");
     this.sim = sim;

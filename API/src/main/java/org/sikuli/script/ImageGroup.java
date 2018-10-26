@@ -96,7 +96,7 @@ public class ImageGroup {
   }
 
   // triggered when lastSeen is stored
-  protected int[] addImageFacts(Image img, Rectangle r, double score) {
+  protected int[] addImageFacts(ImageObject img, Rectangle r, double score) {
     int[] facts = new int[5];
     facts[0] = r.x;
     facts[1] = r.y;

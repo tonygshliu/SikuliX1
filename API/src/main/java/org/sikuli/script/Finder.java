@@ -6,7 +6,6 @@ package org.sikuli.script;
 import org.opencv.core.*;
 import org.sikuli.basics.Debug;
 import org.sikuli.basics.Settings;
-import org.sikuli.util.ScreenHighlighter;
 
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
@@ -19,7 +18,7 @@ public class Finder implements Iterator<Match> {
 
   private Region _region = null;
   private Pattern _pattern = null;
-  private Image _image = null;
+  private ImageObject _image = null;
   private FindInput2 _findInput = new FindInput2();
   private FindResult2 _results = null;
   private Region where = null;
@@ -87,7 +86,7 @@ public class Finder implements Iterator<Match> {
    * @param region search Region within image - topleft = (0,0)
    */
   public Finder(String imageFilename, Region region) {
-    Image img = Image.create(imageFilename);
+    ImageObject img = ImageObject.create(imageFilename);
     if (img.isValid()) {
       _findInput.setSource(Finder2.makeMat(img.get()));
       _region = region;
@@ -127,12 +126,12 @@ public class Finder implements Iterator<Match> {
   }
 
   /**
-   * Finder constructor for special use from an Image
+   * Finder constructor for special use from an ImageObject
    *
-   * @param img Image
+   * @param img ImageObject
    */
-  public Finder(Image img) {
-    log(lvl, "Image: %s", img);
+  public Finder(ImageObject img) {
+    log(lvl, "ImageObject: %s", img);
     _findInput.setSource(Finder2.makeMat(img.get()));
   }
 
@@ -187,7 +186,7 @@ public class Finder implements Iterator<Match> {
       log(-1, "not valid");
       return null;
     }
-    Image img = Image.create(imageOrText);
+    ImageObject img = ImageObject.create(imageOrText);
     if (img.isText()) {
       return findText(imageOrText);
     }
@@ -197,11 +196,11 @@ public class Finder implements Iterator<Match> {
     return null;
   }
 
-  private Mat possibleImageResizeOrCallback(Image img) {
+  private Mat possibleImageResizeOrCallback(ImageObject img) {
     return possibleImageResizeOrCallback(img, 0);
   }
 
-  private Mat possibleImageResizeOrCallback(Image img, float oneTimeResize) {
+  private Mat possibleImageResizeOrCallback(ImageObject img, float oneTimeResize) {
     BufferedImage newBimg = img.get();
     float factor = oneTimeResize;
     if (factor == 0 && Settings.AlwaysResize > 0 && Settings.AlwaysResize != 1) {
@@ -209,7 +208,7 @@ public class Finder implements Iterator<Match> {
     }
     if (factor > 0 && factor != 1) {
       Debug.log(3, "Finder::possibleImageResizeOrCallback: resize");
-      newBimg = Image.resize(newBimg, factor);
+      newBimg = ImageObject.resize(newBimg, factor);
     } else if (Settings.ImageCallback != null) {
       Debug.log(3, "Finder::possibleImageResizeOrCallback: callback");
       newBimg = Settings.ImageCallback.callback(img);
@@ -252,10 +251,10 @@ public class Finder implements Iterator<Match> {
   /**
    * do a find op with the given image in the Finder's image
    * (hasNext() and next() will reveal possible match results)
-   * @param img Image
+   * @param img ImageObject
    * @return null. if find setup not possible
    */
-  public String find(Image img) {
+  public String find(ImageObject img) {
     if (!valid) {
       log(-1, "not valid");
       return null;
@@ -285,7 +284,7 @@ public class Finder implements Iterator<Match> {
       log(-1, "not valid");
       return null;
     }
-    return find(new Image(img));
+    return find(new ImageObject(img));
   }
 
   public List<Region> findChanges(Object changedImage) {
@@ -293,10 +292,10 @@ public class Finder implements Iterator<Match> {
       return null;
     }
     if (changedImage instanceof String) {
-      Image img = Image.create((String) changedImage);
+      ImageObject img = ImageObject.create((String) changedImage);
       _findInput.setTarget(possibleImageResizeOrCallback(img));
     } else if (changedImage instanceof ScreenImage) {
-      Image img = new Image((ScreenImage) changedImage);
+      ImageObject img = new ImageObject((ScreenImage) changedImage);
       _findInput.setTarget(possibleImageResizeOrCallback(img));
     }
     return Finder2.findChanges(_findInput);
@@ -379,7 +378,7 @@ public class Finder implements Iterator<Match> {
       log(-1, "not valid");
       return null;
     }
-    Image img = Image.create(imageOrText);
+    ImageObject img = ImageObject.create(imageOrText);
     _image = img;
     if (img.isText()) {
       setFindAll();
@@ -425,10 +424,10 @@ public class Finder implements Iterator<Match> {
   /**
    * do a findAll op with the given image in the Finder's image
    * (hasNext() and next() will reveal possible match results)
-   * @param img Image
+   * @param img ImageObject
    * @return null. if find setup not possible
    */
-  public String findAll(Image img)  {
+  public String findAll(ImageObject img)  {
     if (!valid) {
       log(-1, "not valid");
       return null;
