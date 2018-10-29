@@ -145,7 +145,7 @@ class ObjBmpRecord(BiffRecord):
         lnw = 0x01          # Line weight
         fAutoB = 0x00       # Automatic border
         frs = 0x0000        # Frame style
-        cf = 0x0009         # ImageObject format, 9 = bitmap
+        cf = 0x0009         # Image format, 9 = bitmap
         Reserved3 = 0x0000  # Reserved
         cbPictFmla = 0x0000 # Length of FMLA structure
         Reserved4 = 0x0000  # Reserved

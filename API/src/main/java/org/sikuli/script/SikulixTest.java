@@ -5,11 +5,13 @@
 package org.sikuli.script;
 
 import org.sikuli.basics.Debug;
+import org.sikuli.basics.FileManager;
 import org.sikuli.basics.Settings;
 import org.sikuli.util.ScreenHighlighter;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
@@ -64,7 +66,7 @@ public class SikulixTest {
     if (!image.endsWith(".png")) {
       image += ".png";
     }
-    showLink = "file://" + ImageObject.create(image).getFileURL().getPath();
+    showLink = "file://" + Image.create(image).getFileURL().getPath();
     showWait = wait;
     showBefore = before;
     Thread runnable = new Thread() {
@@ -376,9 +378,9 @@ public class SikulixTest {
     //<editor-fold desc="test9 basic transparency">
     if (shouldRunTest(9)) {
       before("test9", "basic transparency");
-      Pattern imgBG = new Pattern(ImageObject.create("buttonTextOpa"));
-      Pattern img = new Pattern(ImageObject.create("buttonText"));
-      Pattern imgTrans = new Pattern(ImageObject.create("buttonTextTrans"));
+      Pattern imgBG = new Pattern(Image.create("buttonTextOpa"));
+      Pattern img = new Pattern(Image.create("buttonText"));
+      Pattern imgTrans = new Pattern(Image.create("buttonTextTrans"));
       Pattern maskBlack = new Pattern("buttonTextBlackMask").mask();
       Pattern imgBlack = new Pattern("buttonTextBlackMask");
       Pattern maskTrans = new Pattern("buttonTextTransMask");

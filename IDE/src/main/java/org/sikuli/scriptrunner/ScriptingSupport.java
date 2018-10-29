@@ -214,7 +214,7 @@ public class ScriptingSupport {
         out.writeObject(o);
         out.flush();
         if (o instanceof ImageIcon) {
-          ScriptingSupport.log(lvl,"returned: ImageObject(%dx%d)",
+          ScriptingSupport.log(lvl,"returned: Image(%dx%d)",
                   ((ImageIcon) o).getIconWidth(), ((ImageIcon) o).getIconHeight());
         } else {
           ScriptingSupport.log(lvl,"returned: "  + o);

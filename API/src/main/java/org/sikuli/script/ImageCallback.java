@@ -7,7 +7,7 @@ package org.sikuli.script;
 import java.awt.image.BufferedImage;
 
 public class ImageCallback {
-  public BufferedImage callback(ImageObject img) {
+  public BufferedImage callback(Image img) {
     return img.get();
   }
 }

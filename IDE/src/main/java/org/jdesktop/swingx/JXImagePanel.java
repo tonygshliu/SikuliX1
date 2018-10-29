@@ -36,11 +36,11 @@ import javax.swing.SwingUtilities;
  * image, unless explicitly set by the user.
  * </p>
  * <p>
- * Images to be displayed can be set based on URL, ImageObject, etc. This is
+ * Images to be displayed can be set based on URL, Image, etc. This is
  * accomplished by passing in an image loader.
  *
  * <pre>
- * public class URLImageLoader extends Callable&lt;ImageObject&gt; {
+ * public class URLImageLoader extends Callable&lt;Image&gt; {
  *     private URL url;
  *
  *     public URLImageLoader(URL url) {
@@ -48,7 +48,7 @@ import javax.swing.SwingUtilities;
  *         this.url = url;
  *     }
  *
- *     public ImageObject call() throws Exception {
+ *     public Image call() throws Exception {
  *         return ImageIO.read(url);
  *     }
  * }

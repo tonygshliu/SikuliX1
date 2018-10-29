@@ -17,7 +17,7 @@ public class Match extends Region implements Comparable<Match> {
 
   private double simScore = 0;
   private Location target = null;
-  private ImageObject image = null;
+  private Image image = null;
   private String ocrText = null;
   private long lastSearchTime = -1;
   private long lastFindTime = -1;
@@ -190,9 +190,9 @@ public class Match extends Region implements Comparable<Match> {
 
   /**
    * set the image after finding with success
-   * @param img ImageObject
+   * @param img Image
    */
-  protected void setImage(ImageObject img) {
+  protected void setImage(Image img) {
     image = img;
     if (Settings.Highlight) {
       highlight(Settings.DefaultHighlightTime);
@@ -203,7 +203,7 @@ public class Match extends Region implements Comparable<Match> {
    * get the image used for searching
    * @return image or null
    */
-  public ImageObject getImage() {
+  public Image getImage() {
     return image;
   }
 

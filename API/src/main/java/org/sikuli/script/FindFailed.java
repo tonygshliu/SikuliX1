@@ -55,7 +55,7 @@ public class FindFailed extends SikuliException {
     _name = "FindFailed";
   }
 
-  public static String createdefault(Region reg, ImageObject img) {
+  public static String createdefault(Region reg, Image img) {
     String msg = "";
     if (img.isText()) {
       msg = String.format("%s as text", img.getName());

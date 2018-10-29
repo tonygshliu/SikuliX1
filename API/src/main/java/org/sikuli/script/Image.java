@@ -3,27 +3,42 @@
  */
 package org.sikuli.script;
 
+import java.awt.Dimension;
+import java.awt.Graphics2D;
+import java.awt.Point;
+import java.awt.Rectangle;
+import java.awt.Transparency;
+import java.awt.color.ColorSpace;
+import java.awt.image.BufferedImage;
+import java.awt.image.ColorModel;
+import java.awt.image.ComponentColorModel;
+import java.awt.image.DataBuffer;
+import java.awt.image.DataBufferByte;
+import java.awt.image.SampleModel;
+import java.awt.image.WritableRaster;
+import java.io.File;
+import java.net.URL;
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import javax.imageio.ImageIO;
 import org.sikuli.basics.Debug;
 import org.sikuli.basics.FileManager;
 import org.sikuli.basics.Settings;
 
-import javax.imageio.ImageIO;
-import java.awt.*;
-import java.awt.color.ColorSpace;
-import java.awt.image.*;
-import java.io.File;
-import java.net.URL;
-import java.util.*;
-import java.util.List;
-
 /**
  * This class hides the complexity behind image names given as string.
- * <br>ImageObject does not have public nor protected constructors: use create()
+ * <br>Image does not have public nor protected constructors: use create()
  * <br>It's companion is {@link ImagePath} that maintains a list of places, where image files are
  * loaded from.<br>
  * Another companion {@link ImageGroup} will allow to look at images in a folder as a
  * group.<br>
- * An ImageObject object:<br>
+ * An Image object:<br>
  * - has a name, either given or taken from the basename<br>
  * - keeps it's in memory buffered image in a configurable cache avoiding reload
  * from source<br>
@@ -41,7 +56,7 @@ import java.util.List;
  * image) (managed as a configurable cache)<br>
  * The caching can be configured using {@link Settings#setImageCache(int)}
  */
-public class Image extends Region {
+public class Image {
 
   static RunTime runTime = RunTime.get();
 
@@ -61,15 +76,64 @@ public class Image extends Region {
 
   private static long currentMemory = 0;
 
+  private static synchronized long currentMemoryChange(long size, long max) {
+    long maxMemory = max;
+    if (max < 0) {
+      maxMemory = Settings.getImageCache() * MB;
+      currentMemory += size;
+    }
+    if (currentMemory > maxMemory) {
+      Image first;
+      while (images.size() > 0 && currentMemory > maxMemory) {
+        first = images.remove(0);
+        first.bimg = null;
+        currentMemory -= first.bsize;
+      }
+      if (maxMemory == 0) {
+        currentMemory = 0;
+      } else {
+        currentMemory = Math.max(0, currentMemory);
+      }
+    }
+    if (size < 0) {
+      currentMemory = Math.max(0, currentMemory);
+    }
+    return currentMemory;
+  }
+
+  private static long currentMemoryUp(long size) {
+    return currentMemoryChange(size, -1);
+  }
+
+  private static long currentMemoryDown(long size) {
+    currentMemory -= size;
+    currentMemory = Math.max(0, currentMemory);
+    return currentMemoryChange(-size, -1);
+  }
+
+	private static long currentMemoryDownUp(int sizeOld, int sizeNew) {
+    currentMemoryDown(sizeOld);
+    return currentMemoryUp(sizeNew);
+  }
+
+  private static boolean isCaching() {
+    return Settings.getImageCache() > 0;
+  }
+
+  public static void clearCache(int maxSize) {
+    currentMemoryChange(0, maxSize);
+  }
+
   public static void reload(String fpImage) {
+//    URL uImage = FileManager.makeURL(fpImage);
     URL uImage = imageNames.get(fpImage);
     if (imageFiles.containsKey(uImage)) {
       Image image = imageFiles.get(uImage);
-//      int sizeOld = image.bsize;
-//      if (null != image.loadAgain()) {
-//        currentMemoryDownUp(sizeOld, image.bsize);
-//        image.setLastSeen(null, 0);
-//      }
+      int sizeOld = image.bsize;
+      if (null != image.loadAgain()) {
+        currentMemoryDownUp(sizeOld, image.bsize);
+        image.setLastSeen(null, 0);
+      }
     }
   }
 
@@ -131,16 +195,7 @@ public class Image extends Region {
   }
 //</editor-fold>
 
-//<editor-fold defaultstate="collapsed" desc="ImageObject">
-  public ImageObject getObj() {
-    return imgObj;
-  }
-
-  public void setObj(ImageObject imgObj) {
-    this.imgObj = imgObj;
-  }
-
-  private ImageObject imgObj = null;
+//<editor-fold defaultstate="collapsed" desc="bimg">
   private BufferedImage bimg = null;
 
   protected Image setBimg(BufferedImage bimg) {
@@ -158,23 +213,6 @@ public class Image extends Region {
   }
 
   private int bsize = 0;
-
-  public int getWidth() {
-    return bwidth;
-  }
-
-  public void setWidth(int bwidth) {
-    this.bwidth = bwidth;
-  }
-
-  public int getHeight() {
-    return bheight;
-  }
-
-  public void setHeight(int bheight) {
-    this.bheight = bheight;
-  }
-
   private int bwidth = -1;
   private int bheight = -1;
 
@@ -367,7 +405,7 @@ public class Image extends Region {
     this.lastSeen = lastSeen;
     this.lastScore = sim;
     if (group != null) {
-      group.addImageFacts(getObj(), lastSeen, sim);
+      group.addImageFacts(this, lastSeen, sim);
     }
     return this;
   }
@@ -378,12 +416,12 @@ public class Image extends Region {
   /**
    * to support a raster over the image
    */
-//  private int rows = 0;
-//  private int cols = 0;
-//  private int rowH = 0;
-//  private int colW = 0;
-//  private int rowHd = 0;
-//  private int colWd = 0;
+  private int rows = 0;
+  private int cols = 0;
+  private int rowH = 0;
+  private int colW = 0;
+  private int rowHd = 0;
+  private int colWd = 0;
 
   @Override
   public String toString() {
@@ -439,16 +477,16 @@ public class Image extends Region {
         bheight = bImage.getHeight();
         bsize = bImage.getData().getDataBuffer().getSize();
         log(lvl, "loaded: %s (%s)", imageName, fileURL);
-//        if (isCaching()) {
-//          int maxMemory = Settings.getImageCache() * MB;
-//          currentMemoryUp(bsize);
-//          bimg = bImage;
-//          images.add(this);
-//          log(lvl, "cached: %s (%d KB) (# %d KB %d -- %d %% of %d MB)",
-//                  imageName, getKB(),
-//                  images.size(), (int) (currentMemory / KB),
-//                  (int) (100 * currentMemory / maxMemory), (int) (maxMemory / MB));
-//        }
+        if (isCaching()) {
+          int maxMemory = Settings.getImageCache() * MB;
+          currentMemoryUp(bsize);
+          bimg = bImage;
+          images.add(this);
+          log(lvl, "cached: %s (%d KB) (# %d KB %d -- %d %% of %d MB)",
+                  imageName, getKB(),
+                  images.size(), (int) (currentMemory / KB),
+                  (int) (100 * currentMemory / maxMemory), (int) (maxMemory / MB));
+        }
       } else {
         log(-1, "invalid! not loaded! %s", fileURL);
       }
@@ -502,22 +540,11 @@ public class Image extends Region {
 
   /**
    * create a new Image as copy of the given Image
-   * @param imgSrc given ImageObject
-   * @return new ImageObject
+   * @param imgSrc given Image
+   * @return new Image
    */
   public static Image create(Image imgSrc) {
     return imgSrc.copy();
-  }
-
-  /**
-   * create a new Image as copy of the given Image
-   * @param imgSrc given ImageObject
-   * @return new ImageObject
-   */
-  public static Image create(ImageObject imgSrc) {
-    Image img = new Image();
-    img.setObj(imgSrc);
-    return img;
   }
 
   /**
@@ -539,7 +566,7 @@ public class Image extends Region {
   }
 
   /**
-   * create a new ImageObject with Pattern aspects from an existing Pattern
+   * create a new Image with Pattern aspects from an existing Pattern
    * @param p a Pattern
    * @return the new Image
    */
@@ -600,7 +627,7 @@ public class Image extends Region {
 
   private static Image createImageValidate(Image img, boolean verbose) {
     if (img == null) {
-      log(-1, "ImageObject not valid, creating empty ImageObject");
+      log(-1, "Image not valid, creating empty Image");
       return new Image("", null);
     }
     if (!img.isValid()) {
@@ -612,7 +639,7 @@ public class Image extends Region {
         }
       } else {
         if (verbose) {
-					log(-1, "ImageObject not valid, but TextSearch is switched off!");
+					log(-1, "Image not valid, but TextSearch is switched off!");
 				}
       }
     }
@@ -849,7 +876,7 @@ public class Image extends Region {
         if (imagePurgeList.contains(img)) {
           bit.remove();
           log(lvl + 1, "purge: bimg: %s", img);
-          //currentMemoryDown(img.bsize);
+          currentMemoryDown(img.bsize);
         }
       }
     }
@@ -941,7 +968,7 @@ public class Image extends Region {
     if (img == null) {
       return;
     }
-    //currentMemoryDown(img.bsize);
+    currentMemoryDown(img.bsize);
     img.setBimg(null);
     images.remove(img);
   }
@@ -959,7 +986,7 @@ public class Image extends Region {
    * @param lvl debug level used here
    */
   public static void dump(int lvl) {
-    log(lvl, "--- start of ImageObject dump ---");
+    log(lvl, "--- start of Image dump ---");
     ImagePath.dump(lvl);
     log(lvl, "ImageFiles entries: %d", imageFiles.size());
     Iterator<Map.Entry<URL, Image>> it = imageFiles.entrySet().iterator();
@@ -983,21 +1010,14 @@ public class Image extends Region {
               Settings.getImageCache(), images.size(),
               (int) (100 * currentMemory / (Settings.getImageCache() * MB)), (int) (currentMemory / KB));
     }
-    log(lvl, "--- end of ImageObject dump ---");
-  }
-
-  private int getKB() {
-    if (bimg == null) {
-      return 0;
-    }
-    return (int) bsize / KB;
+    log(lvl, "--- end of Image dump ---");
   }
 
   /**
    * clears all caches (should only be needed for debugging)
    */
   public static void reset() {
-    //clearCache(0);
+    clearCache(0);
     imageNames.clear();
     imageFiles.clear();
   }
@@ -1043,7 +1063,7 @@ public class Image extends Region {
   }
 
 	/**
-	 * checks, wether the ImageObject can be used with the new ImageFinder
+	 * checks, wether the Image can be used with the new ImageFinder
 	 * @return true/false
 	 */
 	public boolean isUseable() {
@@ -1097,6 +1117,21 @@ public class Image extends Region {
   }
 
   /**
+   *
+   * @return size of image
+   */
+  public Dimension getSize() {
+    return new Dimension(bwidth, bheight);
+  }
+
+	private int getKB() {
+    if (bimg == null) {
+      return 0;
+    }
+		return (int) bsize / KB;
+	}
+
+  /**
    * resize the loaded image with factor using Graphics2D.drawImage
    * @param factor resize factor
    * @return a new BufferedImage resized (width*factor, height*factor)
@@ -1141,8 +1176,224 @@ public class Image extends Region {
    * @return the sub image
    */
   public Image getSub(int part) {
-    Rectangle r = Region.getRectangle(new Rectangle(0, 0, bwidth, bheight), part);
+    Rectangle r = Region.getRectangle(new Rectangle(0, 0, getSize().width, getSize().height), part);
     return getSub(r.x, r.y, r.width, r.height);
+  }
+
+  /**
+   * store info: this image is divided vertically into n even rows <br>
+   * a preparation for using getRow()
+   *
+   * @param n number of rows
+   * @return the top row
+   */
+  public Image setRows(int n) {
+    return setRaster(n, 0);
+  }
+
+  /**
+   * store info: this image is divided horizontally into n even columns <br>
+   * a preparation for using getCol()
+   *
+   * @param n number of Columns
+   * @return the leftmost column
+   */
+  public Image setCols(int n) {
+    return setRaster(0, n);
+  }
+
+  /**
+   *
+   * @return number of eventually defined rows in this image or 0
+   */
+  public int getRows() {
+    return rows;
+  }
+
+  /**
+   *
+   * @return height of eventually defined rows in this image or 0
+   */
+  public int getRowH() {
+    return rowH;
+  }
+
+  /**
+   *
+   * @return number of eventually defined columns in this image or 0
+   */
+  public int getCols() {
+    return cols;
+  }
+
+  /**
+   *
+   * @return width of eventually defined columns in this image or 0
+   */
+  public int getColW() {
+    return colW;
+  }
+
+  /**
+   * store info: this image is divided into a raster of even cells <br>
+   * a preparation for using getCell()
+   *
+   * @param r number of rows
+   * @param c number of columns
+   * @return the top left cell
+   */
+  public Image setRaster(int r, int c) {
+    rows = r;
+    cols = c;
+    if (r > 0) {
+      rowH = (int) (getSize().height / r);
+      rowHd = getSize().height - r * rowH;
+    }
+    if (c > 0) {
+      colW = (int) (getSize().width / c);
+      colWd = getSize().width - c * colW;
+    }
+    return getCell(0, 0);
+  }
+
+  /**
+   * get the specified row counting from 0, if rows or raster are setup <br>negative
+   * counts reverse from the end (last = -1) <br>values outside range are 0 or last
+   * respectively
+   *
+   * @param r row number
+   * @return the row as new image or the image itself, if no rows are setup
+   */
+  public Image getRow(int r) {
+    if (rows == 0) {
+      return this;
+    }
+    if (r < 0) {
+      r = rows + r;
+    }
+    r = Math.max(0, r);
+    r = Math.min(r, rows - 1);
+    return getSub(0, r * rowH, getSize().width, rowH);
+  }
+
+  /**
+   * get the specified column counting from 0, if columns or raster are setup<br>
+   * negative counts reverse from the end (last = -1) <br>values outside range are 0
+   * or last respectively
+   *
+   * @param c column number
+   * @return the column as new image or the image itself, if no columns are
+   * setup
+   */
+  public Image getCol(int c) {
+    if (cols == 0) {
+      return this;
+    }
+    if (c < 0) {
+      c = cols + c;
+    }
+    c = Math.max(0, c);
+    c = Math.min(c, cols - 1);
+    return getSub(c * colW, 0, colW, getSize().height);
+  }
+
+  /**
+   * get the specified cell counting from (0, 0), if a raster is setup <br>
+   * negative counts reverse from the end (last = -1) <br>values outside range are 0
+   * or last respectively
+   *
+	 * @param r row number
+   * @param c column number
+   * @return the cell as new image or the image itself, if no raster is setup
+   */
+  public Image getCell(int r, int c) {
+    if (rows == 0) {
+      return getCol(c);
+    }
+    if (cols == 0) {
+      return getRow(r);
+    }
+    if (rows == 0 && cols == 0) {
+      return this;
+    }
+    if (r < 0) {
+      r = rows - r;
+    }
+    if (c < 0) {
+      c = cols - c;
+    }
+    r = Math.max(0, r);
+    r = Math.min(r, rows - 1);
+    c = Math.max(0, c);
+    c = Math.min(c, cols - 1);
+    return getSub(c * colW, r * rowH, colW, rowH);
+  }
+
+  /**
+   * get the OpenCV Mat version of the image's BufferedImage
+   *
+   * @return OpenCV Mat
+   */
+//  public Mat getMat() {
+//    return createMat(get());
+//  }
+//
+//  protected static Mat createMat(BufferedImage img) {
+//    if (img != null) {
+//      Debug timer = Debug.startTimer("Mat create\t (%d x %d) from \n%s", img.getWidth(), img.getHeight(), img);
+//      Mat mat_ref = new Mat(img.getHeight(), img.getWidth(), CvType.CV_8UC4);
+//      timer.lap("init");
+//      byte[] data;
+//      BufferedImage cvImg;
+//      ColorSpace cs = ColorSpace.getInstance(ColorSpace.CS_sRGB);
+//      int[] nBits = {8, 8, 8, 8};
+//      ColorModel cm = new ComponentColorModel(cs, nBits, true, false, Transparency.TRANSLUCENT, DataBuffer.TYPE_BYTE);
+//      SampleModel sm = cm.createCompatibleSampleModel(img.getWidth(), img.getHeight());
+//      DataBufferByte db = new DataBufferByte(img.getWidth() * img.getHeight() * 4);
+//      WritableRaster r = WritableRaster.createWritableRaster(sm, db, new Point(0, 0));
+//      cvImg = new BufferedImage(cm, r, false, null);
+//      timer.lap("empty");
+//      Graphics2D g = cvImg.createGraphics();
+//      g.drawImage(img, 0, 0, null);
+//      g.dispose();
+//      timer.lap("created");
+//      data = ((DataBufferByte) cvImg.getRaster().getDataBuffer()).getData();
+//      mat_ref.put(0, 0, data);
+//      Mat mat = new Mat();
+//      timer.lap("filled");
+//      Imgproc.cvtColor(mat_ref, mat, Imgproc.COLOR_RGBA2BGR, 3);
+//      timer.end();
+//      return mat;
+//    } else {
+//      return null;
+//    }
+//  }
+
+//TODO  protected static MatNative convertBufferedImageToMat(BufferedImage img) {
+//    if (img != null) {
+//      long theMatTime = new Date().getTime();
+//      byte[] data = convertBufferedImageToByteArray(img);
+//      MatNative theMat = VisionNative.createMat(img.getHeight(), img.getWidth(), data);
+//      if (Settings.FindProfiling) {
+//        Debug.logp("[FindProfiling] createCVMat [%d x %d]: %d msec",
+//                img.getWidth(), img.getHeight(), new Date().getTime() - theMatTime);
+//      }
+//      return theMat;
+//    } else {
+//      return null;
+//    }
+//  }
+
+  protected static byte[] convertBufferedImageToByteArray(BufferedImage img) {
+    if (img != null) {
+      BufferedImage cvImg = createBufferedImage(img.getWidth(), img.getHeight());
+      Graphics2D g = cvImg.createGraphics();
+      g.drawImage(img, 0, 0, null);
+      g.dispose();
+      return ((DataBufferByte) cvImg.getRaster().getDataBuffer()).getData();
+    } else {
+      return null;
+    }
   }
 
   protected static BufferedImage createBufferedImage(int w, int h) {
@@ -1155,4 +1406,79 @@ public class Image extends Region {
     BufferedImage bm = new BufferedImage(cm, r, false, null);
     return bm;
   }
+
+	// **************** for Tesseract4Java ********************
+    /**
+     * Converts <code>BufferedImage</code> to <code>ByteBuffer</code>.
+     *
+     * @param bi Input image
+     * @return pixel data
+     */
+    public static ByteBuffer convertImageData(BufferedImage bi) {
+        DataBuffer buff = bi.getRaster().getDataBuffer();
+        // ClassCastException thrown if buff not instanceof DataBufferByte because raster data is not necessarily bytes.
+        // Convert the original buffered image to grayscale.
+        if (!(buff instanceof DataBufferByte)) {
+            bi = convertImageToGrayscale(bi);
+            buff = bi.getRaster().getDataBuffer();
+        }
+        byte[] pixelData = ((DataBufferByte) buff).getData();
+        //        return ByteBuffer.wrap(pixelData);
+        ByteBuffer buf = ByteBuffer.allocateDirect(pixelData.length);
+        buf.order(ByteOrder.nativeOrder());
+        buf.put(pixelData);
+        buf.flip();
+        return buf;
+    }
+
+		/**
+     * A simple method to convert an image to gray scale.
+     *
+     * @param image input image
+     * @return a monochrome image
+     */
+    public static BufferedImage convertImageToGrayscale(BufferedImage image) {
+        BufferedImage tmp = new BufferedImage(image.getWidth(), image.getHeight(), BufferedImage.TYPE_BYTE_GRAY);
+        Graphics2D g2 = tmp.createGraphics();
+        g2.drawImage(image, 0, 0, null);
+        g2.dispose();
+        return tmp;
+    }
+
+	/**
+	 * find an image in another image
+	 * @param img image
+	 * @return a Match or null
+	 */
+	public Match find(Image img) {
+		log(-1, "find: not implemented yet");
+		return null;
+	}
+
+	/**
+	 * find all images in another image
+	 * @param img image
+	 * @return Match or null
+	 */
+	public Iterator<Match> findAll(Image img) {
+		log(-1, "findAll: not implemented yet");
+		return null;
+	}
+
+	/**
+	 * OCR-read the text from the image
+	 * @return the text or empty string
+	 */
+	public String text() {
+      return TextRecognizer.doOCR(this.get());
+	}
+
+	/**
+	 * convenience method: get text from given image file
+	 * @param imgFile image filename
+	 * @return the text or null
+	 */
+	public static String text(String imgFile) {
+		return create(imgFile).text();
+	}
 }

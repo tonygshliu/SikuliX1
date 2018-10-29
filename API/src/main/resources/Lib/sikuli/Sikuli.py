@@ -102,7 +102,7 @@ from org.sikuli.script import Pattern as JPattern
 class Pattern(JPattern):
   pass
 
-Debug.trace("Jython: sikuli: Sikuli: import ImageObject")
+Debug.trace("Jython: sikuli: Sikuli: import Image")
 import org.sikuli.script.Image as JImage
 class Image(JImage):
   pass

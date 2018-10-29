@@ -157,7 +157,7 @@ class SyntaxHighlightLabelView extends LabelView {
     "Screen", "Region", "Location", "Match", "Pattern",
     "Env", "Key", "Button", "Finder",
     "App", "KeyModifier", "Mouse", "Keys", "Image", "ImagePath", "ImageGroup",
-		"Settings",
+		"ImageFind", "ImageFinder", "Settings",
   };
   private static String[] keywordsSikuli = {
     "find", "wait", "findAll", "findText", "findAllText",

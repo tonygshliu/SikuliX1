@@ -18,7 +18,7 @@ import javax.imageio.ImageIO;
  * the screen rectangle it was taken from and
  * the filename, where it is stored as PNG (only if requested)
  *
- * This will be replaced by ImageObject in the long run
+ * This will be replaced by Image in the long run
  */
 public class ScreenImage {
 
@@ -167,7 +167,7 @@ public class ScreenImage {
       Debug.error("ScreenImage.saveInBundle: IOException", iOException);
       return null;
     }
-    ImageObject.reload(fImage.getAbsolutePath());
+    Image.reload(fImage.getAbsolutePath());
     return fImage.getAbsolutePath();
   }
 

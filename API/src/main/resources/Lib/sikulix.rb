@@ -19,6 +19,8 @@ module Sikulix
 
   java_import org.sikuli.script.Constants
   java_import org.sikuli.script.Finder
+  java_import org.sikuli.script.ImageFinder
+  java_import org.sikuli.script.ImageFind
 
   java_import org.sikuli.script.Button
   java_import org.sikuli.basics.OS
@@ -28,7 +30,7 @@ module Sikulix
   java_import org.sikuli.script.Location
 
   java_import org.sikuli.script.ImagePath
-  java_import org.sikuli.script.ImageObject
+  java_import org.sikuli.script.Image
   java_import org.sikuli.script.ImageGroup
 
   java_import org.sikuli.script.App

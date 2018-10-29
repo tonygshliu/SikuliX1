@@ -30,7 +30,7 @@ import org.sikuli.basics.Debug;
 import org.sikuli.basics.FileManager;
 import org.sikuli.idesupport.IIndentationLogic;
 import org.sikuli.script.*;
-import org.sikuli.script.ImageObject;
+import org.sikuli.script.Image;
 import org.sikuli.script.Sikulix;
 import org.sikuli.scriptrunner.IScriptRunner;
 import org.sikuli.scriptrunner.ScriptingSupport;
@@ -792,8 +792,8 @@ public class EditorPane extends JTextPane implements KeyListener, CaretListener 
     return null;
   }
 
-  public ImageObject getImageInBundle(String filename) {
-    return ImageObject.createThumbNail(filename);
+  public Image getImageInBundle(String filename) {
+    return Image.createThumbNail(filename);
   }
 
   //<editor-fold defaultstate="collapsed" desc="Dirty handling">
@@ -1037,7 +1037,7 @@ public class EditorPane extends JTextPane implements KeyListener, CaretListener 
   public boolean reparse(String oldName, String newName, boolean fileOverWritten) {
     boolean success;
     if (fileOverWritten) {
-      ImageObject.unCacheBundledImage(newName);
+      Image.unCacheBundledImage(newName);
     }
     Map<String, List<Integer>> images = parseforImages();
     oldName = new File(oldName).getName();
@@ -1212,7 +1212,7 @@ public class EditorPane extends JTextPane implements KeyListener, CaretListener 
     return String.format("Region(%d,%d,%d,%d)", x, y, w, h);
   }
 
-  public String getPatternString(String ifn, float sim, Location off, ImageObject img, float resizeFactor, String mask) {
+  public String getPatternString(String ifn, float sim, Location off, Image img, float resizeFactor, String mask) {
 //TODO ifn really needed??
     if (ifn == null) {
       return "\"" + EditorPatternLabel.CAPTURE + "\"";

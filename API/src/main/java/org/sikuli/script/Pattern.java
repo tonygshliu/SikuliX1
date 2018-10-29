@@ -59,12 +59,6 @@ public class Pattern {
     imagePattern = true;
   }
 
-  protected Pattern(ImageObject imgObj) {
-    image = Image.create(imgObj);
-    image.setIsPattern(false);
-    imagePattern = true;
-  }
-
   public Pattern resize(float factor) {
     resizeFactor = factor;
     return this;
@@ -75,7 +69,7 @@ public class Pattern {
   }
 
   /**
-   * true if Pattern was created from ImageObject
+   * true if Pattern was created from Image
    *
    * @return true/false
    */
@@ -188,8 +182,8 @@ public class Pattern {
         }
       }
       if (mask.empty()
-              || image.getWidth() != mask.width()
-              || image.getHeight() != mask.height()) {
+              || image.getSize().getWidth() != mask.width()
+              || image.getSize().getHeight() != mask.height()) {
         Debug.log(-1, "Pattern (%s): withMask: not valid", image, pMask.image);
         mask = Finder2.getNewMat();
       } else {
@@ -232,7 +226,7 @@ public class Pattern {
   /**
    * set a new image for this pattern
    *
-   * @param img ImageObject
+   * @param img Image
    * @return the Pattern itself
    */
   public Pattern setFilename(Image img) {
@@ -343,7 +337,7 @@ public class Pattern {
   /**
    * sets the Pattern's image
    *
-   * @param img ImageObject
+   * @param img Image
    * @return the Pattern object itself
    */
   public Pattern setImage(Image img) {
@@ -354,7 +348,7 @@ public class Pattern {
   /**
    * get the Pattern's image
    *
-   * @return ImageObject
+   * @return Image
    */
   public Image getImage() {
     return image;

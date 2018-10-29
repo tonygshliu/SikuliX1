@@ -12,6 +12,7 @@ import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FilenameFilter;
@@ -34,10 +35,11 @@ import java.util.*;
 import java.util.jar.JarOutputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
+import java.util.zip.ZipOutputStream;
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 
-import org.sikuli.script.ImageObject;
+import org.sikuli.script.Image;
 import org.sikuli.script.ImagePath;
 import org.sikuli.script.Sikulix;
 
@@ -1106,7 +1108,7 @@ public class FileManager {
       return null;
     }
     if (shouldReload) {
-      ImageObject.reload(sImage);
+      Image.reload(sImage);
     }
     return fpImage;
   }

@@ -10,18 +10,17 @@ import java.awt.image.BufferedImage;
 import java.io.*;
 import javax.imageio.*;
 import javax.swing.*;
-
-import org.sikuli.script.ImageObject;
 import org.sikuli.script.Location;
 import org.sikuli.basics.Debug;
 import org.sikuli.basics.FileManager;
+import org.sikuli.script.Image;
 
 class EditorPatternButton extends JButton implements ActionListener, Serializable, MouseListener {
 
 	public static final int DEFAULT_NUM_MATCHES = 50;
 	static final float DEFAULT_SIMILARITY = 0.7f;
 	private String _imgFilename, _thumbFname, _imgFilenameSaved;
-  private ImageObject _image;
+  private Image _image;
   private JLabel patternImageIcon = null;
 	private EditorPane _pane;
 	private float _similarity, _similaritySaved;
@@ -50,7 +49,7 @@ class EditorPatternButton extends JButton implements ActionListener, Serializabl
 		init(pane, imgFilename, null);
 	}
 
-	private EditorPatternButton(EditorPane pane, ImageObject img) {
+	private EditorPatternButton(EditorPane pane, Image img) {
     this._image = null;
 		init(pane, null, img);
 	}
@@ -68,7 +67,7 @@ class EditorPatternButton extends JButton implements ActionListener, Serializabl
     _pane = _lbl.getPane();
   }
 
-	private void init(EditorPane pane, String imgFilename, ImageObject img) {
+	private void init(EditorPane pane, String imgFilename, Image img) {
     //TODO thumbMax = PreferencesUser.getInstance().getDefaultThumbHeight() == 0 ? false : true;
 		_pane = pane;
 		_exact = false;
@@ -98,7 +97,7 @@ class EditorPatternButton extends JButton implements ActionListener, Serializabl
     if (!str.startsWith("Pattern")) {
 			str = str.substring(1, str.length() - 1);
       str = FileManager.slashify(str, false);
-			ImageObject img = ImageObject.createThumbNail(str);
+			Image img = Image.createThumbNail(str);
       if (img.isValid() && img.isBundled()) {
         return new EditorPatternButton(parentPane, img);
       }
@@ -114,7 +113,7 @@ class EditorPatternButton extends JButton implements ActionListener, Serializabl
 			} else if (tok.startsWith("Pattern")) {
 				String filename = FileManager.slashify(tok.substring(
 								tok.indexOf("\"") + 1, tok.lastIndexOf("\"")), false);
-        ImageObject img = ImageObject.createThumbNail(filename);
+        Image img = Image.createThumbNail(filename);
         if (img.isValid() && img.isBundled()) {
 					btn.setFilename(img);
         } else {
@@ -218,7 +217,7 @@ class EditorPatternButton extends JButton implements ActionListener, Serializabl
     setButtonText();
   }
 
-  private void setFilename(ImageObject img) {
+  private void setFilename(Image img) {
     _image = img;
     _imgFilename = _image.getFilename();
     setIcon(new ImageIcon(createThumbnailImage(_imgFilename, PreferencesUser.getInstance().getDefaultThumbHeight())));
@@ -241,7 +240,7 @@ class EditorPatternButton extends JButton implements ActionListener, Serializabl
         img = _image.get();
       } else {
 
-//TODO ????        Debug.error("EditorPatternButton: createThumbnailImage: not using ImageObject for: " + imgFname);
+//TODO ????        Debug.error("EditorPatternButton: createThumbnailImage: not using Image for: " + imgFname);
         img = ImageIO.read(new File(imgFname));
       }
 			int w = img.getWidth(null), h = img.getHeight(null);

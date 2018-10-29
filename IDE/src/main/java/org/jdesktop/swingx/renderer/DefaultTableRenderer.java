@@ -23,7 +23,7 @@ import javax.swing.table.TableCellRenderer;
  *         FormatStringValues.NUMBER_TO_STRING, JLabel.RIGHT));
  * setDefaultRenderer(Date.class, new DefaultTableRenderer(
  *         FormatStringValues.DATE_TO_STRING));
- * // use the same center aligned default for ImageObject/Icon
+ * // use the same center aligned default for Image/Icon
  * TableCellRenderer renderer = new DefaultTableRenderer(new MappedValue(
  *         StringValues.EMPTY, IconValues.ICON), JLabel.CENTER);
  * setDefaultRenderer(Icon.class, renderer);

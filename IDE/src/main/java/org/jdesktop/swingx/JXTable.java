@@ -3623,7 +3623,7 @@ public class JXTable extends JTable implements TableColumnModelExtListener {
     /**
      * Creates default cell renderers for <code>Object</code>s,
      * <code>Number</code>s, <code>Date</code>s, <code>Boolean</code>s,
-     * <code>Icon/ImageObject/</code>s and <code>URI</code>s.
+     * <code>Icon/Image/</code>s and <code>URI</code>s.
      * <p>
      * Overridden to replace all super default renderers with SwingX variants and
      * additionally register a default for <code>URI</code> types. Note: the latter
@@ -3645,7 +3645,7 @@ public class JXTable extends JTable implements TableColumnModelExtListener {
                 StringValues.NUMBER_TO_STRING, JLabel.RIGHT));
         setDefaultRenderer(Date.class, new DefaultTableRenderer(
                 StringValues.DATE_TO_STRING));
-        // use the same center aligned default for ImageObject/Icon
+        // use the same center aligned default for Image/Icon
         TableCellRenderer renderer = new DefaultTableRenderer(new MappedValue(
                 StringValues.EMPTY, IconValues.ICON), JLabel.CENTER);
         setDefaultRenderer(Icon.class, renderer);

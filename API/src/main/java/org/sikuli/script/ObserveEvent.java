@@ -24,7 +24,7 @@ public class ObserveEvent {
   private Region region = null;
   private Object pattern = null;
   private Match match = null;
-  private ImageObject image = null;
+  private Image image = null;
   private FindFailedResponse response = FindFailed.defaultFindFailedResponse;
   private int index = -1;
   private List<Match> changes = null;
@@ -209,18 +209,18 @@ public class ObserveEvent {
         pattern = new Pattern((String) p);
       } else if (p instanceof Pattern) {
         pattern = new Pattern((Pattern) p);
-      } else if (p instanceof ImageObject) {
-        pattern = new Pattern((ImageObject) p);
+      } else if (p instanceof Image) {
+        pattern = new Pattern((Image) p);
       }
     }
   }
 
-  public ImageObject getImage() {
+  public Image getImage() {
     return image;
   }
 
   public void setImage(Object img) {
-    image = (ImageObject) img;
+    image = (Image) img;
   }
 
   public void setResponse(FindFailedResponse resp) {

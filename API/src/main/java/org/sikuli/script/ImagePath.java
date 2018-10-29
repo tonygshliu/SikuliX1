@@ -7,6 +7,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.security.CodeSource;
 import java.util.ArrayList;
@@ -486,7 +487,7 @@ public class ImagePath {
    */
   private static boolean remove(URL pURL) {
     if (bundleEquals(pURL)) {
-      ImageObject.purge(pURL);
+      Image.purge(pURL);
       bundlePath = null;
       Settings.BundlePath = null;
       imagePaths.set(0, null);
@@ -500,14 +501,14 @@ public class ImagePath {
         continue;
       }
       it.remove();
-      ImageObject.purge(p.pathURL);
+      Image.purge(p.pathURL);
     }
     return true;
   }
 
   /**
    * empty path list and add given path as first entry
-	 * ImageObject cache is cleared completely
+	 * Image cache is cleared completely
    *
    * @param path absolute path
    * @return true on success, false otherwise
@@ -522,7 +523,7 @@ public class ImagePath {
 
   /**
    * empty path list and keep bundlePath (entry 0)<br>
-	 * ImageObject cache is cleared completely
+	 * Image cache is cleared completely
    * convenience for the scripting level
    * @return true
    */
@@ -535,7 +536,7 @@ public class ImagePath {
       if (p == null) {
         continue;
       }
-      ImageObject.purge(p.pathURL);
+      Image.purge(p.pathURL);
     }
     PathEntry bp = imagePaths.get(0);
     imagePaths.clear();
@@ -562,7 +563,7 @@ public class ImagePath {
       if (bundleEquals(path)) {
 				return true;
 			}
-      ImageObject.purge(bundlePath);
+      Image.purge(bundlePath);
 			if (path.exists()) {
 				imagePaths.set(0, path);
 				Settings.BundlePath = path.getPath();
