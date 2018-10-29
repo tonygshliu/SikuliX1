@@ -56,7 +56,7 @@ import org.sikuli.basics.Settings;
  * image) (managed as a configurable cache)<br>
  * The caching can be configured using {@link Settings#setImageCache(int)}
  */
-public class Image {
+public class Image extends Region {
 
   static RunTime runTime = RunTime.get();
 
