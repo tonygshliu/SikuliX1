@@ -5,13 +5,11 @@
 package org.sikuli.script;
 
 import org.sikuli.basics.Debug;
-import org.sikuli.basics.FileManager;
 import org.sikuli.basics.Settings;
 import org.sikuli.util.ScreenHighlighter;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
@@ -240,31 +238,31 @@ public class SikulixTest {
     }
 
     //<editor-fold desc="test1 exists">
-    if (shouldRunTest(1)) {
-      before("test1", "scr.exists(testImage)");
-      show(testImage, 0);
-      scr.wait(2.0);
-      match = scr.exists(testImage, 10);
-      match.highlight(2);
-
-      after();
-    }
+//    if (shouldRunTest(1)) {
+//      before("test1", "scr.exists(testImage)");
+//      show(testImage, 0);
+//      scr.wait(2.0);
+//      match = scr.exists(testImage, 10);
+//      match.highlight(2);
+//
+//      after();
+//    }
     //</editor-fold>
 
     //<editor-fold desc="test2 findChange">
-    if (shouldRunTest(2)) {
-      before("test2", "findChanges");
-      show(testImage, 0);
-      scr.wait(2.0);
-      Finder finder = new Finder(testImage);
-      String imgChange = "findChange3";
-      List<Region> changes = finder.findChanges(imgChange);
-      match = scr.exists(testImage, 10);
-      for (Region change : changes) {
-        match.getInset(change).highlight(1);
-      }
-      after();
-    }
+//    if (shouldRunTest(2)) {
+//      before("test2", "findChanges");
+//      show(testImage, 0);
+//      scr.wait(2.0);
+//      Finder finder = new Finder(testImage);
+//      String imgChange = "findChange3";
+//      List<Region> changes = finder.findChanges(imgChange);
+//      match = scr.exists(testImage, 10);
+//      for (Region change : changes) {
+//        match.getInset(change).highlight(1);
+//      }
+//      after();
+//    }
     //</editor-fold>
 
     //<editor-fold desc="test3 text OCR">
