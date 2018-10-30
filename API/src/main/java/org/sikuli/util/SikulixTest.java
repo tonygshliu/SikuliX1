@@ -4,12 +4,8 @@
 
 package org.sikuli.util;
 
-import org.sikuli.basics.Debug;
-import org.sikuli.basics.Settings;
 import org.sikuli.script.*;
 
-import java.io.File;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -86,8 +82,8 @@ public class SikulixTest {
     }
   }
 
-  private static Region reg = null;
-  private static Region regWin = null;
+  public static Region reg = null;
+  public static Region regWin = null;
 
   public static boolean openTestPage() {
     return openTestPage("");

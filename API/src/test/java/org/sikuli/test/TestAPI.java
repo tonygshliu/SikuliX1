@@ -62,7 +62,9 @@ public class TestAPI extends SikulixTest {
     String testImage = "findBase";
     show(testImage);
     scr.wait(2.0);
-    current.setResult("ok: " + highlightIf(scr.exists(testImage)));
+    Match match = (Match) highlightIf(scr.exists(testImage));
+    assert SX.isNotNull(match) : "not found: " + testImage;
+    current.setResult("ok: " + match.toStringShort());
     after();
   }
 
